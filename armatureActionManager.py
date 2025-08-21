@@ -1,6 +1,6 @@
 bl_info = {
     "name": "Armature Action Manager",
-    "author": "254599003117715457",
+    "author": "254599003117715457 (Discord ID)",
     "version": (1, 0, 0),
     "blender": (3, 0, 0),
     "location": "3D Viewport > Sidebar > AAM",
@@ -14,6 +14,7 @@ bl_info = {
 import bpy
 import os
 
+# View what actions are usable by selected Armature.
 def get_usable_actions(armature):
     usable = []
     if not armature or armature.type != 'ARMATURE':
@@ -26,7 +27,7 @@ def get_usable_actions(armature):
                     usable.append(action)
                     break
     return usable
-
+# Fields that show up in the panel UI.
 class MyAddonProperties(bpy.types.PropertyGroup):
     armature: bpy.props.PointerProperty(
         name="Armature",
@@ -44,7 +45,7 @@ class MyAddonProperties(bpy.types.PropertyGroup):
         max=100.0,
         precision=2
     )
-
+# Export all operator button
 class MYADDON_OT_ExportAllActions(bpy.types.Operator):
     bl_idname = "myaddon.export_all_actions"
     bl_label = "Export All Actions"
@@ -97,7 +98,7 @@ class MYADDON_OT_ExportAllActions(bpy.types.Operator):
 
             armature.animation_data.action = action
             bpy.context.view_layer.update()
-
+            # Safe file name measures
             safe_name = action.name.replace(" ", "_")
             export_path = os.path.join(export_dir, f"{armature.name}_{safe_name}.fbx")
 
@@ -146,7 +147,7 @@ class MYADDON_OT_SetAction(bpy.types.Operator):
         armature.animation_data.action = action
         self.report({'INFO'}, f"Assigned action '{action.name}' to {armature.name}")
         return {'FINISHED'}
-
+# Panel UI visibility and presentation to user.
 class MYADDON_PT_Panel(bpy.types.Panel):
     bl_label = "Armature Action Manager"
     bl_idname = "MYADDON_PT_panel"
@@ -158,12 +159,10 @@ class MYADDON_PT_Panel(bpy.types.Panel):
         layout = self.layout
         props = context.scene.armature_props
         armature = props.armature
-
         layout.prop(props, "armature")
         layout.prop(props, "fbx_global_scale")
 
-
-
+        # When an armature gets selected, display others
         if armature:
             usable = get_usable_actions(armature)
             if usable:
@@ -185,6 +184,8 @@ class MYADDON_PT_Panel(bpy.types.Panel):
 
 classes = [MyAddonProperties, MYADDON_OT_ExportAllActions, MYADDON_OT_SetAction, MYADDON_PT_Panel]
 
+
+# Blender add-on visibility.
 def register():
     for cls in classes:
         bpy.utils.register_class(cls)
@@ -197,3 +198,4 @@ def unregister():
 
 if __name__ == "__main__":
     register()
+
