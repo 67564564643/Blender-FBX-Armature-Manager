@@ -5,5 +5,6 @@
 4. Install the python file
 
 ## How to use
-1. Under view, click on "Arm"
-2. Select the armature you wish to view possible actions for
+1. Be in 3D viewport
+2. Arm will exist as a button on the right under the Item, Tool & View
+3. Click on Arm and select the armature object you wish to view actions for
